@@ -176,7 +176,7 @@
             `
             <tr id="add_tr_${rows}">
                 <td>
-                    <input class="form-control" name="field[]" placeholder="Masukan Nama Field Inputan">
+                    <input class="form-control add_input_${rows}" name="field[]" placeholder="Masukan Nama Field Inputan">
                 </td>
                 <td>
                     <button class="btn btn-danger" type="button" onclick="deleteRows('add', ${rows})"><i class="fas fa-times"></i></button>
