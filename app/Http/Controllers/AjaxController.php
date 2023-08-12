@@ -131,13 +131,15 @@ class AjaxController extends Controller
                 $validate['master_klaster_uuid'] = $request['master_klaster_uuid'];
                 $insert = SubKlaster::create($validate);
                 if (!$insert) throw new \ErrorException('Gagal Menambahkan Sub Klaster Baru');
-                foreach ($request['field'] as $field) {
-                    $insertForm = FormInputSubKlaster::create([
-                        'sub_klaster_uuid' => $insert['uuid'],
-                        'label' => ucfirst(preg_replace('/[^a-zA-Z0-9]/', "_", $field)),
-                        'name' => $field,
-                    ]);
-                    if (!$insertForm) throw new \ErrorException('Gagal Menambahkan Data Inputan');
+                if (count($request['field']) > 1) {
+                    foreach ($request['field'] as $field) {
+                        $insertForm = FormInputSubKlaster::create([
+                            'sub_klaster_uuid' => $insert['uuid'],
+                            'label' => ucfirst(preg_replace('/[^a-zA-Z0-9]/', "_", $field)),
+                            'name' => $field,
+                        ]);
+                        if (!$insertForm) throw new \ErrorException('Gagal Menambahkan Data Inputan');
+                    }
                 }
                 $message = "Berhasil Menambahkan Sub Klaster Baru";
             } else if ($request['status'] == "edit") {
@@ -212,17 +214,37 @@ class AjaxController extends Controller
         try {
             if ($request['status'] == "add") {
                 $validate = $this->validate($request, [
-                    'sub_klaster_uuid' => 'required',
                     'date_start' => 'required',
                     'date_end' => 'required'
                 ], [
-                    'sub_klaster_uuid.required' => 'Kesalahan sistem Mohon di refresh',
                     'date_start.required' => 'Anda belum menginputkan Tanggal Dimulai',
                     'date_end.required' => 'Anda belum menginputkan Tanggal Diakhiri',
                 ]);
                 $insert = ScheduleInput::create($validate);
                 if (!$insert) throw new \ErrorException('Terjadi kesalahan saat Tambah Jadwal Input');
                 $message = "Berhasil menambahkan Jadwal Input";
+            } else if ($request['status'] == "edit") {
+                $validate = $this->validate($request, [
+                    'date_start' => 'required',
+                    'date_end' => 'required'
+                ], [
+                    'date_start.required' => 'Anda belum menginputkan Tanggal Dimulai',
+                    'date_end.required' => 'Anda belum menginputkan Tanggal Diakhiri',
+                ]);
+                $insert = ScheduleInput::where('id', $request['id'])->update($validate);
+                if (!$insert) throw new \ErrorException('Terjadi kesalahan saat Merubah Jadwal Input');
+                $message = "Berhasil Merubah Jadwal Input";
+            } else if ($request['status'] == "hapus") {
+                $validate = $this->validate($request, [
+                    'date_start' => 'required',
+                    'date_end' => 'required'
+                ], [
+                    'date_start.required' => 'Anda belum menginputkan Tanggal Dimulai',
+                    'date_end.required' => 'Anda belum menginputkan Tanggal Diakhiri',
+                ]);
+                $insert = ScheduleInput::where('id', $request['id'])->delete();
+                if (!$insert) throw new \ErrorException('Terjadi kesalahan saat Menghapus Jadwal Input');
+                $message = "Berhasil Menghapus Jadwal Input";
             }
             return response()->json([
                 'status' => true,

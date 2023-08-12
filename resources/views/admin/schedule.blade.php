@@ -15,7 +15,6 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Sub Klaster</th>
                                 <th>Tanggal Mulai</th>
                                 <th>Tanggal Akhir</th>
                                 <th>Action</th>
@@ -39,15 +38,6 @@
             <form id="add" method="POST">
                 <div class="modal-body">
                     <input type="hidden" name="status" value="add">
-                    <div class="form-group">
-                        <label>Sub Klaster</label>
-                        <select class="form-select" name="sub_klaster_uuid">
-                            <option>Silahkan Pilih Sub Klaster</option>
-                            @foreach($subklaster as $sk)
-                            <option value="{{ $sk['uuid'] }}">{{ $sk['name'] }}</option>
-                            @endforeach
-                        </select>
-                    </div>
                     <div class="form-group">
                         <label>Tanggal Dimulai</label>
                         <input type="date" class="form-control" name="date_start">
@@ -77,17 +67,12 @@
                     <input type="hidden" name="status" value="edit">
                     <input type="hidden" id="edit_id" name="id">
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" id="edit_name" name="name" placeholder="Mohon Masukan Nama OPD">
+                        <label>Tanggal Dimulai</label>
+                        <input type="date" class="form-control" id="edit_date_start" name="date_start">
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" id="edit_email" name="email" placeholder="Mohon Masukan Alamat Email">
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" class="form-control" id="edit_password" name="password" placeholder="Mohon Masukan Password">
-                        <small class="text-danger">* jika ingin mengganti password silahkan input kolom password ini</small>
+                        <label>Tanggal Diakhiri</label>
+                        <input type="date" class="form-control" id="edit_date_end" name="date_end">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -110,12 +95,12 @@
                     <input type="hidden" name="status" value="hapus">
                     <input type="hidden" id="hapus_id" name="id">
                     <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" readonly id="hapus_name" name="name" placeholder="Mohon Masukan Nama OPD">
+                        <label>Tanggal Dimulai</label>
+                        <input type="date" class="form-control" disabled id="hapus_date_start" name="date_start">
                     </div>
                     <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" readonly id="hapus_email" name="email" placeholder="Mohon Masukan Alamat Email">
+                        <label>Tanggal Diakhiri</label>
+                        <input type="date" class="form-control" disabled id="hapus_date_end" name="date_end">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -132,10 +117,6 @@
     var columns = [{
             data: 'id',
             name: 'id'
-        },
-        {
-            data: 'sub_klaster_uuid',
-            name: 'sub_klaster_uuid'
         },
         {
             data: 'date_start',
@@ -213,8 +194,8 @@
             url: "{{url('data/schedule')}}/" + id,
             success: function(data) {
                 $("#edit_id").val(data.id);
-                $("#edit_name").val(data.name);
-                $("#edit_email").val(data.email);
+                $("#edit_date_start").val(data.date_start);
+                $("#edit_date_end").val(data.date_end);
             }
         })
     }
@@ -278,8 +259,8 @@
             url: "{{url('data/schedule')}}/" + id,
             success: function(data) {
                 $("#hapus_id").val(data.id);
-                $("#hapus_name").val(data.name);
-                $("#hapus_email").val(data.email);
+                $("#hapus_date_start").val(data.date_start);
+                $("#hapus_date_end").val(data.date_end);
             }
         })
     }
