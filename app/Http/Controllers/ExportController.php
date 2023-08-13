@@ -63,27 +63,6 @@ class ExportController extends Controller
                 }
             }
         }
-        // $rows = 10;
-        // $cols = 5;
-        // $section->addText(htmlspecialchars('Basic table'), $header);
-
-        // $table = $section->addTable();
-        // for ($r = 1; $r <= $userInput->count(); $r++) {
-        //     $table->addRow();
-        //     for ($c = 1; $c <= 3; $c++) {
-        //         $user = User::where('id', $input['user_id'])->first();
-        //         $inputan = UserInputDetail::where('user_input_uuid', $input['uuid'])->get();
-        //         $html = "<ul>";
-        //         foreach ($inputan as $dInput) {
-        //             $html .= "<li>Label : " . $dInput['label'] . " Value : " . $dInput['value'] . "</li>";
-        //         }
-        //         $html .= "</ul>";
-        //         $table->addCell("A$row_start", $start);
-        //         $table->addCell("B$row_start", $user['name']);
-        //         $table->addCell("C$row_start", $html);
-        //         $table->addCell(1750)->addText(htmlspecialchars("Row {$r}, Cell {$c}"));
-        //     }
-        // }
 
 
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
