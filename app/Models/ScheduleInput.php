@@ -11,7 +11,7 @@ class ScheduleInput extends Model
     use HasFactory;
 
     protected $fillable = [
-        'sub_klaster_uuid',
+        'uuid',
         'date_start',
         'date_end'
     ];

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('schedule_inputs', function (Blueprint $table) {
             $table->id();
+            $table->uuid();
             $table->string('date_start');
             $table->string('date_end');
             $table->timestamps();

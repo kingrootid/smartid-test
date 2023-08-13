@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid();
             $table->integer('user_id');
+            $table->uuid('schedule_input_uuid');
             $table->uuid('sub_klaster_uuid');
             $table->timestamps();
         });

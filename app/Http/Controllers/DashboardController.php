@@ -6,12 +6,14 @@ use App\Models\FormInputSubKlaster;
 use App\Models\MasterKlaster;
 use App\Models\ScheduleInput;
 use App\Models\SubKlaster;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
     public function dashboard()
     {
+
         $data = [
             'page' => 'Dashboard',
             'user' => auth()->user(),
@@ -59,16 +61,15 @@ class DashboardController extends Controller
     }
     public function pengisian($uuid)
     {
-        $dataSubKlaster = getSubKlasterData($uuid);
-        if (!$dataSubKlaster) {
+        $dataSchedule = ScheduleInput::where('uuid', $uuid)->first();
+        if (!$dataSchedule) {
             return back();
         } else {
             $data = [
                 'page' => 'Pengisian',
                 'user' => auth()->user(),
-                'masterKlaster' => MasterKlaster::where('uuid', $dataSubKlaster['master_klaster_uuid'])->first(),
-                'subKlaster' => $dataSubKlaster,
-                'inputan' => FormInputSubKlaster::where('sub_klaster_uuid', $uuid)->get()
+                'masterKlaster' => MasterKlaster::get(),
+                'schedule' => $dataSchedule
             ];
             return view('pengisian', $data);
         }

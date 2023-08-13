@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'dashboard']);
     Route::get('pengisian/{uuid}', [DashboardController::class, 'pengisian']);
     Route::get('export/{uuid}', [ExportController::class, 'export']);
+    Route::get('export/show/{uuid}', [ExportController::class, 'show']);
 
 
 
@@ -42,6 +43,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/sub-klaster/{id}', [DataController::class, 'getSubKlaster']);
         Route::get('/schedule', [DataController::class, 'scheduleInput']);
         Route::get('/schedule/{id}', [DataController::class, 'getScheduleInput']);
+        Route::get('/getForm/{uuid}', [DataController::class, 'getFormInputUUID']);
     });
     /* Ajax Route */
     Route::group(['prefix' => 'ajax'], function () {

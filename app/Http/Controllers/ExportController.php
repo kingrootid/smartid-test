@@ -16,47 +16,51 @@ class ExportController extends Controller
     {
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(false);
-        $getInfoData = ScheduleInput::where('sub_klaster_uuid', $uuid)->first();
-        $userInput = UserInput::where('sub_klaster_uuid', $uuid);
-        $subKlaster = SubKlaster::where('uuid', $uuid)->first();
-        $masterKlaster = MasterKlaster::where('uuid', $subKlaster['master_klaster_uuid'])->first();
+        $getInfoData = ScheduleInput::where('uuid', $uuid)->first();
+        $masterKlaster = MasterKlaster::get();
         $section = $phpWord->addSection();
         $header = array('size' => 16, 'bold' => true);
 
         $start = 1;
         $row_start = 2;
         $rows = 3;
-        $cols = $userInput->count();
-        $section->addText(htmlspecialchars('Input Data User'), $header);
-        $section->addText($masterKlaster['name']);
-        $section->addText($subKlaster['name']);
         $tableStyle = array(
             'borderColor' => '006699',
             'borderSize'  => 6,
             'cellMargin'  => 50
         );
-        $firstRowStyle = array('bgColor' => '66BBFF');
-        $phpWord->addTableStyle('myTable', $tableStyle, $firstRowStyle);
-        $table = $section->addTable('myTable');
-        $table->addRow();
-        $table->addCell(1750)->addText('No');
-        $table->addCell(1750)->addText('Nama User');
-        $table->addCell(1750)->addText('Input');
-        for ($d = 0; $d < $rows; $d++) {
-            $table->addRow();
-            foreach ($userInput->get() as $input) {
-                $user = User::where('id', $input['user_id'])->first();
-                $inputan = UserInputDetail::where('user_input_uuid', $input['uuid'])->get();
-                $html = "<ul>";
-                $html .= "</ul>";
-                $table->addCell(1750)->addText(htmlspecialchars($start));
-                $table->addCell(1750)->addText(htmlspecialchars($user['name']));
-                $text = "Inputan : ";
-                foreach ($inputan as $dInput) {
-                    $text .= "<w:br/>Label : " . $dInput['label'] . " Value : " . $dInput['value'] . "<w:br/>";
+        $section->addText(htmlspecialchars('Input Data User'), $header);
+        foreach ($masterKlaster as $mk) {
+            $section->addText($mk['name']);
+            $subKlaster = SubKlaster::where('master_klaster_uuid', $mk['uuid'])->get();
+            foreach ($subKlaster as $sk) {
+                $section->addText($sk['name']);
+                $userInput = UserInput::where('sub_klaster_uuid', $sk['uuid']);
+                $cols = $userInput->count();
+                $firstRowStyle = array('bgColor' => '66BBFF');
+                $phpWord->addTableStyle('myTable', $tableStyle, $firstRowStyle);
+                $table = $section->addTable('myTable');
+                $table->addRow();
+                $table->addCell(1750)->addText('No');
+                $table->addCell(1750)->addText('Nama User');
+                $table->addCell(1750)->addText('Input');
+                for ($d = 0; $d < $cols; $d++) {
+                    $table->addRow();
+                    foreach ($userInput->get() as $input) {
+                        $user = User::where('id', $input['user_id'])->first();
+                        $inputan = UserInputDetail::where('user_input_uuid', $input['uuid'])->get();
+                        $html = "<ul>";
+                        $html .= "</ul>";
+                        $table->addCell(1750)->addText(htmlspecialchars($start));
+                        $table->addCell(1750)->addText(htmlspecialchars($user['name']));
+                        $text = "Inputan : ";
+                        foreach ($inputan as $dInput) {
+                            $text .= "<w:br/>Label : " . $dInput['label'] . " Value : " . $dInput['value'] . "<w:br/>";
+                        }
+                        $table->addCell(20000)->addText($text);
+                        $start++;
+                    }
                 }
-                $table->addCell(20000)->addText($text);
-                $start++;
             }
         }
         // $rows = 10;
@@ -90,5 +94,21 @@ class ExportController extends Controller
 
 
         return response()->download(storage_path('helloWorld.docx'));
+    }
+    public function show($uuid)
+    {
+        $dataSchedule = ScheduleInput::where('uuid', $uuid)->first();
+        if (!$dataSchedule) {
+            return back();
+        } else {
+            checkAdminLogin();
+            $data = [
+                'page' => 'Data Penginputan',
+                'user' => auth()->user(),
+                'masterKlaster' => MasterKlaster::get(),
+                'schedule' => $dataSchedule
+            ];
+            return view('admin.input', $data);
+        }
     }
 }

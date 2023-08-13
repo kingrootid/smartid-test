@@ -220,6 +220,7 @@ class AjaxController extends Controller
                     'date_start.required' => 'Anda belum menginputkan Tanggal Dimulai',
                     'date_end.required' => 'Anda belum menginputkan Tanggal Diakhiri',
                 ]);
+                $validate['uuid'] = genUUID();
                 $insert = ScheduleInput::create($validate);
                 if (!$insert) throw new \ErrorException('Terjadi kesalahan saat Tambah Jadwal Input');
                 $message = "Berhasil menambahkan Jadwal Input";
@@ -235,13 +236,6 @@ class AjaxController extends Controller
                 if (!$insert) throw new \ErrorException('Terjadi kesalahan saat Merubah Jadwal Input');
                 $message = "Berhasil Merubah Jadwal Input";
             } else if ($request['status'] == "hapus") {
-                $validate = $this->validate($request, [
-                    'date_start' => 'required',
-                    'date_end' => 'required'
-                ], [
-                    'date_start.required' => 'Anda belum menginputkan Tanggal Dimulai',
-                    'date_end.required' => 'Anda belum menginputkan Tanggal Diakhiri',
-                ]);
                 $insert = ScheduleInput::where('id', $request['id'])->delete();
                 if (!$insert) throw new \ErrorException('Terjadi kesalahan saat Menghapus Jadwal Input');
                 $message = "Berhasil Menghapus Jadwal Input";
@@ -262,12 +256,12 @@ class AjaxController extends Controller
     {
         DB::beginTransaction();
         try {
-
-            $getInput = FormInputSubKlaster::where('sub_klaster_uuid', $request['sub_klaster_uuid'])->get();
+            $getInput = FormInputSubKlaster::get();
             $uuid = genUUID();
             UserInput::create([
                 'uuid' => $uuid,
                 'user_id' => auth()->user()->id,
+                'schedule_input_uuid' => $request['schedule_input_uuid'],
                 'sub_klaster_uuid' => $request['sub_klaster_uuid']
             ]);
             foreach ($getInput as $check) {

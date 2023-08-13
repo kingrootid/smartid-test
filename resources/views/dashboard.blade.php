@@ -104,10 +104,6 @@
                     <tbody>
                         @foreach($schedules as $schedule)
                         <tr>
-                            <td class="w-30">
-                                <p class="text-xs font-weight-bold mb-0">Nama Pengisian:</p>
-                                <h6 class="text-sm mb-0">{{ getSubKlasterData($schedule['sub_klaster_uuid'])['name'] }}</h6>
-                            </td>
                             <td>
                                 <div class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">Tanggal Dimulai:</p>
@@ -124,8 +120,8 @@
                                 <div class="col text-center">
                                     <p class="text-xs font-weight-bold mb-0">Shortcut:</p>
                                     <h6 class="text-sm mb-0">
-                                        @if(render_button_shortcut($schedule['uuid']))
-                                        <a href="{{ url('pengisian/'.$schedule['sub_klaster_uuid'].'') }}" class="btn btn-info">Isi Sekarang</a>
+                                        @if(render_button_shortcut($schedule['id']))
+                                        <a href="{{ url('pengisian/'.$schedule['uuid'].'') }}" class="btn btn-info">Isi Sekarang</a>
                                         @else
                                         <button type="button" class="btn btn-danger">Expired / Belum Dimulai</button>
                                         @endif

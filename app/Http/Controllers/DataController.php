@@ -71,12 +71,18 @@ class DataController extends Controller
         })->addColumn('action', function ($row) {
             $actionBtn = "<a class='btn btn-icon waves-effect btn-warning' href='javascript:;' onclick='edit(" . $row['id'] . ")'><i class='fa fa-edit''></i></a> ";
             $actionBtn .= "<a class='btn btn-icon waves-effect btn-danger mr-3' href='javascript:;' onclick='hapus(" . $row['id'] . ")'><i class='fa fa-trash''></i></a>";
-            $actionBtn .= "<a class='btn btn-icon waves-effect btn-info' href='" . url('export/' . $row['sub_klaster_uuid'] . '') . "'><i class='fa fa-file''></i></a>";
+            $actionBtn .= "<a class='btn btn-icon waves-effect btn-info' href='" . url('export/' . $row['uuid'] . '') . "'><i class='fa fa-file''></i></a>";
+            $actionBtn .= "<a class='btn btn-icon waves-effect btn-success' href='" . url('export/show/' . $row['uuid'] . '') . "'><i class='fa fa-magnifying-glass''></i></a>";
             return $actionBtn;
         })->rawColumns(['action'])->make(true);
     }
     public function getScheduleInput($id)
     {
         return \App\Models\ScheduleInput::where('id', $id)->first();
+    }
+    public function getFormInputUUID($uuid)
+
+    {
+        return \App\Models\FormInputSubKlaster::where('sub_klaster_uuid', $uuid)->get();
     }
 }

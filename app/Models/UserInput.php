@@ -12,6 +12,7 @@ class UserInput extends Model
     protected $fillable = [
         'uuid',
         'user_id',
-        'sub_klaster_uuid'
+        'schedule_input_uuid',
+        'sub_klaster_uuid',
     ];
 }
