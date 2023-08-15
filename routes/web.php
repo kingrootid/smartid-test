@@ -52,6 +52,8 @@ Route::middleware('auth')->group(function () {
         Route::post('/sub-klaster', [AjaxController::class, 'subKlaster']);
         Route::post('/schedule', [AjaxController::class, 'scheduleInput']);
         Route::post('/pengisian', [AjaxController::class, 'userInput']);
+        Route::post('/check-info', [AjaxController::class, 'getInfoInput']);
+        Route::post('/update-pengisian', [AjaxController::class, 'updateInput']);
     });
 });
 

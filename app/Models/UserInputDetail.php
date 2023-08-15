@@ -11,6 +11,7 @@ class UserInputDetail extends Model
 
     protected $fillable = [
         'user_input_uuid',
+        'name',
         'label',
         'value'
     ];

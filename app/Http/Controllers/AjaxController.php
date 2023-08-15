@@ -270,6 +270,7 @@ class AjaxController extends Controller
                 } else {
                     UserInputDetail::create([
                         'user_input_uuid' => $uuid,
+                        'name' => $check['name'],
                         'label' => $check['label'],
                         'value' => $request[$check['name']]
                     ]);
@@ -283,6 +284,57 @@ class AjaxController extends Controller
             ]);
         } catch (\ErrorException $e) {
             DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+                'line' => $e->getLine()
+            ]);
+        }
+    }
+    public function updateInput(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $check = FormInputSubKlaster::where([
+                ['sub_klaster_uuid', $request['sub_klaster_uuid']],
+            ])->get();
+            foreach ($check as $form) {
+                $update = UserInputDetail::where([
+                    ['user_input_uuid', $request['user_input_uuid']],
+                    ['label', $form['label']]
+                ])->update([
+                    'value' => $request[$form['name']]
+                ]);
+            }
+            $message = "Berhasil Mengupdate";
+            DB::commit();
+            return response()->json([
+                'status' => true,
+                'message' => $message
+            ]);
+        } catch (\ErrorException $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+                'line' => $e->getLine()
+            ]);
+        }
+    }
+    public function getInfoInput(Request $request)
+    {
+        try {
+            $validate = $this->validate($request, [
+                'sub_klaster_uuid' => 'required',
+                'schedule_uuid' => 'required'
+            ]);
+            $check = UserInput::where([
+                ['user_id', auth()->user()->id],
+                ['schedule_input_uuid', $validate['schedule_uuid']],
+                ['sub_klaster_uuid', $validate['sub_klaster_uuid']]
+            ])->first();
+            return UserInputDetail::where('user_input_uuid', $check['uuid'])->get();
+        } catch (\ErrorException $e) {
             return response()->json([
                 'status' => false,
                 'message' => $e->getMessage(),

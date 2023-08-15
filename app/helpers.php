@@ -62,13 +62,11 @@ if (!function_exists('render_button_shortcut')) {
     function render_button_shortcut($uuid)
     {
         $carbon = Carbon::now()->format('Y-m-d');
-        $data = ScheduleInput::where('id', $uuid)->whereDate('date_start', '>=', $carbon)->first();
-        if (empty($data)) {
-            return false;
-        } else if (Carbon::parse($carbon)->diffInDays($data['date_end']) == 0) {
-            return false;
-        } else {
+        $data = DB::table('schedule')->where('id', $uuid)->count();
+        if ($data) {
             return true;
+        } else {
+            return false;
         }
     }
 }

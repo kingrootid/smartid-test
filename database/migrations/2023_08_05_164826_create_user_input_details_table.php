@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('user_input_details', function (Blueprint $table) {
             $table->id();
             $table->uuid('user_input_uuid');
+            $table->string('name');
             $table->string('label');
             $table->longText('value');
             $table->timestamps();
